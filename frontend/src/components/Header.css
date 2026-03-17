@@ -1,0 +1,135 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem;
+  height: 70px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.icon-btn {
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-btn:hover {
+  background-color: var(--border-color);
+}
+
+.logo-link {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.youtube-icon-bg {
+  width: 32px;
+  height: 22px;
+  background-color: #ff0000;
+  border-radius: 6px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.triangle {
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid white;
+  margin-left: 2px;
+}
+
+.logo-text {
+  position: relative;
+  top: 1px;
+}
+
+.header-center {
+  flex: 0 1 600px;
+  max-width: 600px;
+}
+
+.search-form {
+  border: 1px solid var(--border-color);
+  border-radius: 40px;
+  overflow: hidden;
+  background-color: var(--bg-main);
+  transition: border-color 0.2s;
+}
+
+.search-form:focus-within {
+  border-color: #1a56db;
+}
+
+.search-form input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0.6rem 1rem;
+  padding-left: 1.5rem;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.search-form input:focus {
+  outline: none;
+}
+
+.search-btn {
+  padding: 0 1.2rem;
+  background-color: var(--border-color);
+  border-left: 1px solid var(--border-color);
+}
+
+.search-btn:hover {
+  background-color: #3f4455;
+}
+
+.avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+}
+
+.sign-in-btn {
+  color: #3ea6ff;
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.sign-in-btn:hover {
+  background-color: rgba(62, 166, 255, 0.1);
+  border-color: transparent;
+}
+
+@media (max-width: 768px) {
+  .header-left {
+    gap: 0.5rem;
+  }
+  
+  .hide-mobile {
+    display: none;
+  }
+  
+  .search-form {
+    display: none; /* In a real app we'd have a mobile search toggle */
+  }
+  
+  .header-center {
+    flex: 0;
+  }
+}
