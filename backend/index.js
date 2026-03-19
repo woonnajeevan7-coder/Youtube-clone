@@ -35,10 +35,13 @@ app.get('/', (req, res) => {
   res.send('API is running...');
 });
 
+// Port
+const PORT = process.env.PORT || 5000;
+
 // Startup
 const startServer = async () => {
   try {
-    await connectDB(); // wait for DB connection
+    await connectDB();
 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT} 🚀`);
