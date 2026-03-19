@@ -11,6 +11,9 @@ import commentRoutes from './routes/commentRoutes.js';
 // Load environment variables
 dotenv.config();
 
+// Connect to database
+connectDB();
+
 const app = express();
 
 // Middleware
@@ -19,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    origin: 'http://localhost:5173', // Vite default port
     credentials: true,
   })
 );
@@ -38,26 +41,6 @@ app.get('/', (req, res) => {
 // Port
 const PORT = process.env.PORT || 5000;
 
-// Startup
-const startServer = async () => {
-  try {
-    await connectDB();
-
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT} 🚀`);
-    });
-  } catch (error) {
-    console.error("Database connection failed ❌", error);
-    process.exit(1);
-  }
-};
-
-startServer();
-
-process.on("uncaughtException", (err) => {
-  console.error("Uncaught Exception:", err);
-});
-
-process.on("unhandledRejection", (err) => {
-  console.error("Unhandled Rejection:", err);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
