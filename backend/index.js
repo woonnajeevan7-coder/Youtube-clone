@@ -11,9 +11,6 @@ import commentRoutes from './routes/commentRoutes.js';
 // Load environment variables
 dotenv.config();
 
-// Connect to database
-connectDB();
-
 const app = express();
 
 // Middleware
@@ -38,9 +35,26 @@ app.get('/', (req, res) => {
   res.send('API is running...');
 });
 
-// Port
-const PORT = process.env.PORT || 5000;
+// Startup
+const startServer = async () => {
+  try {
+    await connectDB(); // wait for DB connection
 
-app.listen(PORT, '127.0.0.1', () => {
-  console.log(`Server running on http://127.0.0.1:${PORT}`);
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT} 🚀`);
+    });
+  } catch (error) {
+    console.error("Database connection failed ❌", error);
+    process.exit(1);
+  }
+};
+
+startServer();
+
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err);
+});
+
+process.on("unhandledRejection", (err) => {
+  console.error("Unhandled Rejection:", err);
 });
