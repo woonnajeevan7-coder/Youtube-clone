@@ -1,5 +1,7 @@
 # YouTube Clone Capstone
 
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/woonnajeevan7-coder/Youtube-clone)
+
 A full-stack YouTube clone built using the MERN stack (MongoDB, Express, React, Node.js). This project features a state-of-the-art dark mode UI, complete with video management, authentication, and commenting functionalities.
 
 ## Features
