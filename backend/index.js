@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: 'http://localhost:5173', // Vite default port
+    origin: ['http://localhost:5173', 'http://localhost:5174'],
     credentials: true,
   })
 );
@@ -41,6 +41,6 @@ app.get('/', (req, res) => {
 // Port
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(PORT, '127.0.0.1', () => {
+  console.log(`Server running on http://127.0.0.1:${PORT}`);
 });
