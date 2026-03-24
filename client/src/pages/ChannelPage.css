@@ -1,0 +1,187 @@
+.channel-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.channel-banner {
+  height: 220px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  background-color: #272727;
+  border: 1px solid var(--border-color);
+}
+
+.channel-header {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 0 24px;
+}
+
+.channel-logo {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.channel-info-text h1 {
+  margin: 0 0 4px 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.channel-stats {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin: 4px 0;
+  font-weight: 500;
+}
+
+.channel-desc {
+  font-size: 14px;
+  margin: 8px 0 0 0;
+  color: var(--text-secondary);
+  max-width: 600px;
+  line-height: 20px;
+}
+
+.upload-toggle-btn {
+  background-color: var(--text-primary);
+  color: var(--bg-color);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  transition: opacity 0.2s;
+}
+
+.upload-toggle-btn:hover {
+  opacity: 0.9;
+}
+
+.upload-form {
+  background-color: #272727;
+  padding: 32px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+  border: 1px solid var(--border-color);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.upload-form input, .upload-form textarea, .upload-form select {
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #3f3f3f;
+  background: #0f0f0f;
+  color: var(--text-primary);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.upload-form input:focus, .upload-form textarea:focus, .upload-form select:focus {
+  border-color: #1a73e8;
+}
+
+.form-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.publish-btn {
+  background-color: #3ea6ff;
+  color: #0f0f0f;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.cancel-btn {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: none;
+  padding: 10px 24px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.cancel-btn:hover {
+  background-color: #3f3f3f;
+}
+
+.channel-videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px 16px;
+  margin-top: 24px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 24px;
+}
+
+.video-management-btns {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.mgmt-btn.delete {
+  background: transparent;
+  color: #ff4d4d;
+  border: 1px solid #ff4d4d;
+  padding: 6px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.2s;
+}
+
+.mgmt-btn.delete:hover {
+  background-color: rgba(255, 77, 77, 0.1);
+}
+
+.create-channel-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 60px;
+}
+
+.create-channel-container .upload-form {
+    max-width: 500px;
+    width: 100%;
+}
+
+.create-channel-container button {
+    background-color: #3ea6ff;
+    color: #0f0f0f;
+    border: none;
+    padding: 12px;
+    border-radius: 24px;
+    font-weight: 600;
+    cursor: pointer;
+}

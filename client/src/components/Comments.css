@@ -1,0 +1,164 @@
+.comments-section {
+  margin-top: 24px;
+}
+
+.comment-input-area {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.comment-input-area img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-top: 4px;
+}
+
+.comment-input-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.comment-input-area input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 8px 0;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.comment-input-area input:focus {
+  border-bottom: 2px solid var(--text-primary);
+}
+
+.comment-submit-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.comment-input-area button {
+  background-color: #3ea6ff;
+  border: none;
+  border-radius: 18px;
+  color: #0f0f0f;
+  font-weight: 500;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.comment-input-area button:hover {
+  opacity: 0.9;
+}
+
+.comment-item {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.comment-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.comment-content {
+  flex: 1;
+}
+
+.comment-header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.comment-user {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.comment-date {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.comment-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.comment-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  color: var(--text-secondary);
+  align-items: center;
+}
+
+.comment-actions svg {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.comment-actions svg:hover {
+  color: var(--text-primary);
+}
+
+.edit-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edit-area input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--text-primary);
+  color: var(--text-primary);
+  padding: 8px 0;
+  font-size: 14px;
+  outline: none;
+}
+
+.edit-btns {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.edit-btns button {
+  padding: 8px 16px;
+  border-radius: 18px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.edit-btns button:first-child {
+  background-color: #3ea6ff;
+  color: #0f0f0f;
+}
+
+.edit-btns button:last-child {
+  background-color: transparent;
+  color: var(--text-primary);
+}
+
+.edit-btns button:last-child:hover {
+  background-color: #272727;
+}

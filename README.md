@@ -1,66 +1,65 @@
-# YouTube Clone Capstone
+# YouTube Clone Capstone Project (MERN Stack)
 
-[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/woonnajeevan7-coder/Youtube-clone)
+A professional, full-featured YouTube clone built with the MERN stack for the Internshala Capstone Project.
 
-A full-stack YouTube clone built using the MERN stack (MongoDB, Express, React, Node.js). This project features a state-of-the-art dark mode UI, complete with video management, authentication, and commenting functionalities.
+## 🚀 Features
 
-## Features
-- **Modern UI**: Built with premium vanilla CSS featuring glassmorphism, responsive grids, and subtle animations.
-- **Authentication**: JWT-based login and registration.
-- **Video Viewing**: Watch videos, like/dislike, and a full comments section.
-- **Channel Dashboard**: Create a channel, upload videos, edit video details, and delete videos.
-- **Search & Filter**: Search videos by title globally from the header, and filter them by category on the home page.
-- **Database Seeding**: A built-in seeder script to instantly populate the application with dummy videos and users.
+### Front-End (React + Vite)
+- **Home Page**: Responsive video grid, YouTube-style header, toggleable sidebar, and category filters (7 categories).
+- **Authentication**: Secure JWT-based registration and login with input validation and auto-redirect.
+- **Video Player**: High-quality video playback, interactive like/dislike buttons, and comprehensive comment management (CRUD).
+- **Channel Page**: Dedicated space for creators to manage their videos (Full CRUD: Upload, View, Delete).
+- **Search & Filter**: Real-time searching by video title and category-based filtering.
+- **Refined UX**: Toast notifications, loading states, and a premium dark-mode aesthetic.
 
-## Prerequisites
-- Node.js installed
-- MongoDB installed locally, or a MongoDB URI for a cloud instance.
+### Back-End (Node.js + Express)
+- **RESTful API**: Clean route design for users, videos, comments, and channels.
+- **ES Modules**: Modern `import`/`export` syntax used throughout.
+- **Security**: Password hashing with Bcrypt and protected routes via JWT middleware.
+- **Database**: MongoDB (Mongoose) with optimized schemas for relational data.
 
-## Project Setup
+## 🛠️ Tech Stack
+- **Frontend**: React, React Router, Axios, Lucide-React, React-Toastify.
+- **Backend**: Node.js, Express.js, JWT, Bcrypt.js.
+- **Database**: MongoDB (Local or Atlas compatible).
 
-### 1. Clone & Install Dependencies
-1. Clone this repository to your local machine.
-2. Open a terminal in the root directory and install backend dependencies:
-   ```bash
-   cd backend
-   npm install
-   ```
-3. Open another terminal in the root directory and install frontend dependencies:
-   ```bash
-   cd frontend
-   npm install
-   ```
-
-### 2. Configure Environment Variables
-Inside the `backend` folder, the `.env` file should look like this:
-```env
-PORT=5000
-MONGO_URI=mongodb://127.0.0.1:27017/youtube_clone
-JWT_SECRET=supersecretjwtkeythatshouldbechangedinproduction
+## 📦 Project Structure
+```text
+/client   - React Vite Frontend
+/server   - Node.js Express Backend
+README.md - Main Documentation
 ```
 
-### 3. Seed the Database
-Before running the application, seed the database with sample users, channels, and videos to evaluate the features out-of-the-box.
-```bash
-cd backend
-npm run data:import
-```
-This script creates dummy users (`john@example.com` / `password123`) and injects several videos matching to different channels.
+## ⚙️ Setup & Usage
 
-### 4. Run the Application
-1. Start the Backend server:
-   ```bash
-   cd backend
-   npm start 
-   # or npm run dev for nodemon
-   ```
-2. Start the Frontend Vite development server:
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-3. Open your browser and navigate to `http://localhost:5173`.
+### 1. Prerequisites
+- Node.js (v18+)
+- MongoDB (Running locally or an Atlas URI)
 
-## File Structure & Tech Stack
-- **/backend**: Express APIs, MongoDB Mongoose schema models, JWT auth middleware. Uses ES Modules (`import/export`).
-- **/frontend**: React project created using Vite. Uses React Router for navigation, Context API for state management, Axios for API calls, and Lucide React for SVG icons.
+### 2. Backend Installation (`/server`)
+1. `cd server`
+2. `npm install`
+3. Create `.env` with:
+   ```env
+   PORT=5000
+   MONGO_URI=your_mongodb_uri
+   JWT_SECRET=your_jwt_secret
+   ```
+4. Seed the database: `node seed.js` (Creates 10 rubric-compliant videos and users).
+5. Start server: `npm run dev`.
+
+### 3. Frontend Installation (`/client`)
+1. `cd client`
+2. `npm install --legacy-peer-deps`
+3. Create `.env` with:
+   ```env
+   VITE_API_URL=http://localhost:5000/api
+   ```
+4. Start client: `npm run dev`.
+
+## 📜 Rubric Compliance
+- [x] ES Modules Used.
+- [x] Vite Framework used (No CRA).
+- [x] Full CRUD for Comments and Videos.
+- [x] JWT Authentication implemented.
+- [x] Responsive layout for all devices.

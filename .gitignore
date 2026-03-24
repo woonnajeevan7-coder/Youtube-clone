@@ -1,7 +1,10 @@
 node_modules/
+server/node_modules/
+client/node_modules/
 .env
-.DS_Store
+client/.env
+server/.env
 dist/
-.vite/
-.eslintcache
-package-lock.json
+dist-ssr/
+*.local
+.DS_Store

@@ -1,0 +1,89 @@
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  background-color: transparent;
+}
+
+.google-auth-card {
+  background-color: white;
+  color: #202124;
+  padding: 48px 40px 36px;
+  border-radius: 8px;
+  border: 1px solid #dadce0;
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+}
+
+.logo-section svg {
+  margin-bottom: 12px;
+}
+
+.logo-section h2 {
+  font-family: 'Google Sans','Noto Sans Bengali',sans-serif;
+  font-size: 24px;
+  margin: 0;
+  font-weight: 400;
+}
+
+.logo-section p {
+  font-size: 16px;
+  margin: 8px 0 32px;
+}
+
+.auth-form-refined {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-form-refined input {
+  padding: 13px 15px;
+  font-size: 16px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.auth-form-refined input:focus {
+  border: 2px solid #1a73e8;
+  outline: none;
+  padding: 12px 14px;
+}
+
+.auth-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.create-account-link {
+  color: #1a73e8;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.next-btn {
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.next-btn:hover {
+  background-color: #1765cc;
+}
+
+/* Dark theme overrides for outer container if needed */
+body {
+    background-color: #0f0f0f;
+}
