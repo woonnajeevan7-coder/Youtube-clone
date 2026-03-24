@@ -25,8 +25,8 @@ A professional, full-featured YouTube clone built with the MERN stack for the In
 
 ## 📦 Project Structure
 ```text
-/client   - React Vite Frontend
-/server   - Node.js Express Backend
+/frontend - React Vite Frontend
+/backend  - Node.js Express Backend
 README.md - Main Documentation
 ```
 
@@ -36,8 +36,8 @@ README.md - Main Documentation
 - Node.js (v18+)
 - MongoDB (Running locally or an Atlas URI)
 
-### 2. Backend Installation (`/server`)
-1. `cd server`
+### 2. Backend Installation (`/backend`)
+1. `cd backend`
 2. `npm install`
 3. Create `.env` with:
    ```env
@@ -48,8 +48,8 @@ README.md - Main Documentation
 4. Seed the database: `node seed.js` (Creates 10 rubric-compliant videos and users).
 5. Start server: `npm run dev`.
 
-### 3. Frontend Installation (`/client`)
-1. `cd client`
+### 3. Frontend Installation (`/frontend`)
+1. `cd frontend`
 2. `npm install --legacy-peer-deps`
 3. Create `.env` with:
    ```env
