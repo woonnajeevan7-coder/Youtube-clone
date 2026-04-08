@@ -1,8 +1,13 @@
 import Video from '../models/Video.js';
 import Channel from '../models/Channel.js';
 
-// @desc    Get all videos
-// @route   GET /api/videos
+/**
+ * @desc    Get all videos
+ * @route   GET /api/videos
+ * @access  Public
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 export const getVideos = async (req, res) => {
   const { search, category } = req.query;
   const query = {};
@@ -17,8 +22,13 @@ export const getVideos = async (req, res) => {
   }
 };
 
-// @desc    Get single video
-// @route   GET /api/videos/:videoId
+/**
+ * @desc    Get single video by videoId
+ * @route   GET /api/videos/:videoId
+ * @access  Public
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 export const getVideoById = async (req, res) => {
   try {
     const video = await Video.findOne({ videoId: req.params.videoId });
