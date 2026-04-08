@@ -39,8 +39,13 @@ export const getVideoById = async (req, res) => {
   }
 };
 
-// @desc    Upload video
-// @route   POST /api/videos
+/**
+ * @desc    Upload video
+ * @route   POST /api/videos
+ * @access  Private (Uploader)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 export const uploadVideo = async (req, res) => {
   try {
     const videoIdStr = `video${Date.now()}`;
@@ -63,8 +68,13 @@ export const uploadVideo = async (req, res) => {
   }
 };
 
-// @desc    Update video
-// @route   PUT /api/videos/:videoId
+/**
+ * @desc    Update video by videoId
+ * @route   PUT /api/videos/:videoId
+ * @access  Private (Owner)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 export const updateVideo = async (req, res) => {
   try {
     const video = await Video.findOne({ videoId: req.params.videoId });
