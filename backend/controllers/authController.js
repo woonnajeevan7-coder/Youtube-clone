@@ -2,12 +2,22 @@ import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
+/**
+ * Generates a JWT token for a given user ID.
+ * @param {string} id - The user ID.
+ * @returns {string} The generated JWT token.
+ */
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
-// @desc    Register a new user
-// @route   POST /api/auth/register
+/**
+ * @desc    Register a new user
+ * @route   POST /api/auth/register
+ * @access  Public
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 export const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
 
