@@ -89,8 +89,13 @@ export const updateVideo = async (req, res) => {
   }
 };
 
-// @desc    Delete video
-// @route   DELETE /api/videos/:videoId
+/**
+ * @desc    Delete video by videoId
+ * @route   DELETE /api/videos/:videoId
+ * @access  Private (Owner)
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 export const deleteVideo = async (req, res) => {
   try {
     const video = await Video.findOne({ videoId: req.params.videoId });
@@ -111,8 +116,13 @@ export const deleteVideo = async (req, res) => {
   }
 };
 
-// @desc    Like video
-// @route   POST /api/videos/:videoId/like
+/**
+ * @desc    Like video by videoId
+ * @route   POST /api/videos/:videoId/like
+ * @access  Public
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 export const likeVideo = async (req, res) => {
   try {
     const video = await Video.findOne({ videoId: req.params.videoId });
@@ -124,8 +134,13 @@ export const likeVideo = async (req, res) => {
   } catch (error) { res.status(500).json({ message: error.message }); }
 };
 
-// @desc    Dislike video
-// @route   POST /api/videos/:videoId/dislike
+/**
+ * @desc    Dislike video by videoId
+ * @route   POST /api/videos/:videoId/dislike
+ * @access  Public
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 export const dislikeVideo = async (req, res) => {
     try {
       const video = await Video.findOne({ videoId: req.params.videoId });
