@@ -25,6 +25,7 @@ const Header = ({ toggleSidebar }) => {
              <PlaySquare color="white" fill="red" size={24} />
           </div>
           <span className="logo-text">YouTube</span>
+          <span className="logo-country">IN</span>
         </Link>
       </div>
 

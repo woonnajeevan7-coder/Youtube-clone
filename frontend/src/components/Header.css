@@ -46,6 +46,15 @@
   letter-spacing: -1px;
 }
 
+.logo-country {
+  font-family: 'Roboto', sans-serif;
+  font-size: 10px;
+  color: var(--text-secondary);
+  position: relative;
+  top: -8px;
+  left: -2px;
+}
+
 .header-center {
   flex: 0 1 732px;
   display: flex;
