@@ -1,9 +1,6 @@
 # YouTube Clone Capstone Project (MERN Stack)
 Official Repository: [https://github.com/woonnajeevan7-coder/Youtube-clone](https://github.com/woonnajeevan7-coder/Youtube-clone)
 
-## 🎥 Project Demo
-[Recording 2026-04-09 011850.mp4](./Recording%202026-04-09%20011850.mp4)
-
 A professional, full-featured YouTube clone built with the MERN stack for the Internshala Capstone Project.
 
 ## 🚀 Features
