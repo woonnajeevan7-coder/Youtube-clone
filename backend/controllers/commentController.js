@@ -1,7 +1,12 @@
 import Video from '../models/Video.js';
 
-// @desc    Add comment to video
-// @route   POST /api/videos/:videoId/comments
+/**
+ * @desc    Add a comment to a video
+ * @route   POST /api/videos/:videoId/comments
+ * @access  Private
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 export const addComment = async (req, res) => {
   const { text } = req.body;
   if (!text) return res.status(400).json({ message: 'Comment text is required' });
@@ -25,8 +30,13 @@ export const addComment = async (req, res) => {
   }
 };
 
-// @desc    Get all comments for a video
-// @route   GET /api/videos/:videoId/comments
+/**
+ * @desc    Get all comments for a specific video
+ * @route   GET /api/videos/:videoId/comments
+ * @access  Public
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 export const getComments = async (req, res) => {
   try {
     const video = await Video.findOne({ videoId: req.params.videoId });
