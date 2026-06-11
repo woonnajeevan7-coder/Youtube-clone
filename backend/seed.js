@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import bcrypt from 'bcryptjs';
 import User from './models/User.js';
 import Video from './models/Video.js';
 import Channel from './models/Channel.js';
@@ -16,8 +17,8 @@ const videos = [
     channelId: "channel01",
     uploader: "user01",
     views: 15200,
-    likes: 1023,
-    dislikes: 45,
+    likes: [],
+    dislikes: [],
     uploadDate: "2024-09-20",
     category: "Education",
     comments: [
@@ -38,8 +39,8 @@ const videos = [
     channelId: "channel02",
     uploader: "techguru",
     views: 5400,
-    likes: 800,
-    dislikes: 10,
+    likes: [],
+    dislikes: [],
     uploadDate: "2024-10-15",
     category: "Technology",
     comments: []
@@ -53,8 +54,8 @@ const videos = [
     channelId: "channel02",
     uploader: "techguru",
     views: 12000,
-    likes: 1500,
-    dislikes: 20,
+    likes: [],
+    dislikes: [],
     uploadDate: "2024-11-01",
     category: "Education",
     comments: []
@@ -68,8 +69,8 @@ const videos = [
     channelId: "channel03",
     uploader: "musically",
     views: 89000,
-    likes: 4500,
-    dislikes: 100,
+    likes: [],
+    dislikes: [],
     uploadDate: "2024-12-10",
     category: "Music",
     comments: []
@@ -83,8 +84,8 @@ const videos = [
     channelId: "channel04",
     uploader: "gamerpro",
     views: 250000,
-    likes: 20000,
-    dislikes: 500,
+    likes: [],
+    dislikes: [],
     uploadDate: "2025-01-05",
     category: "Gaming",
     comments: []
@@ -98,8 +99,8 @@ const videos = [
     channelId: "channel01",
     uploader: "user01",
     views: 32000,
-    likes: 2100,
-    dislikes: 15,
+    likes: [],
+    dislikes: [],
     uploadDate: "2025-02-12",
     category: "Technology",
     comments: []
@@ -113,8 +114,8 @@ const videos = [
     channelId: "channel05",
     uploader: "sportscenter",
     views: 1500000,
-    likes: 85000,
-    dislikes: 2000,
+    likes: [],
+    dislikes: [],
     uploadDate: "2025-03-01",
     category: "Sports",
     comments: []
@@ -128,8 +129,8 @@ const videos = [
     channelId: "channel06",
     uploader: "newsnetwork",
     views: 45000,
-    likes: 1200,
-    dislikes: 300,
+    likes: [],
+    dislikes: [],
     uploadDate: "2025-03-20",
     category: "News",
     comments: []
@@ -143,8 +144,8 @@ const videos = [
     channelId: "channel01",
     uploader: "user01",
     views: 22000,
-    likes: 1100,
-    dislikes: 12,
+    likes: [],
+    dislikes: [],
     uploadDate: "2025-03-22",
     category: "Education",
     comments: []
@@ -158,8 +159,8 @@ const videos = [
     channelId: "channel02",
     uploader: "techguru",
     views: 67000,
-    likes: 4200,
-    dislikes: 35,
+    likes: [],
+    dislikes: [],
     uploadDate: "2025-03-24",
     category: "Education",
     comments: []
@@ -176,8 +177,8 @@ const channels = [
 ];
 
 const users = [
-  { userId: "user01", username: "JohnDoe", email: "john@example.com", password: "hashedPassword123", avatar: "https://ui-avatars.com/api/?name=John+Doe", channels: ["channel01"] },
-  { userId: "user02", username: "techguru", email: "tech@example.com", password: "hashedPassword456", avatar: "https://ui-avatars.com/api/?name=Tech+Guru" }
+  { userId: "user01", username: "JohnDoe", email: "john@example.com", password: "password123", avatar: "https://ui-avatars.com/api/?name=John+Doe", channels: ["channel01"] },
+  { userId: "user02", username: "techguru", email: "tech@example.com", password: "password123", avatar: "https://ui-avatars.com/api/?name=Tech+Guru" }
 ];
 
 const seedDB = async () => {
@@ -188,6 +189,12 @@ const seedDB = async () => {
     await User.deleteMany({});
     await Video.deleteMany({});
     await Channel.deleteMany({});
+
+    // Hash passwords
+    for (const u of users) {
+      const salt = await bcrypt.genSalt(10);
+      u.password = await bcrypt.hash(u.password, salt);
+    }
 
     await User.insertMany(users);
     await Video.insertMany(videos);

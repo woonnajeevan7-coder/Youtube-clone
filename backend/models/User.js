@@ -6,7 +6,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   avatar: { type: String, default: 'https://via.placeholder.com/150' },
-  channels: [String]
+  channels: [String],
+  watchHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Video' }]
 }, { timestamps: true });
 
 export default mongoose.model('User', userSchema);

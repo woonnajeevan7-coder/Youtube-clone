@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: nexttube-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - nexttube-network
+
+  redis:
+    image: redis:7.0-alpine
+    container_name: nexttube-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - nexttube-network
+
+  elasticsearch:
+    image: elasticsearch:8.8.2
+    container_name: nexttube-elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - nexttube-network
+
+networks:
+  nexttube-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  redis_data:
+  elasticsearch_data:

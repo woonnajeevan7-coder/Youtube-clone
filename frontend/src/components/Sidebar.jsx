@@ -15,13 +15,14 @@ import {
   Flame
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import { memo } from 'react';
 import './Sidebar.css';
 
 const Sidebar = ({ isOpen }) => {
   return (
     <aside className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
       <div className="sidebar-section">
-        <NavLink to="/" className="sidebar-item active">
+        <NavLink to="/" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}>
           <Home size={24} strokeWidth={1.5} />
           <span>Home</span>
         </NavLink>
@@ -47,10 +48,10 @@ const Sidebar = ({ isOpen }) => {
           <History size={24} strokeWidth={1.5} />
           <span>History</span>
         </div>
-        <div className="sidebar-item">
+        <NavLink to="/playlists" className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}>
           <ListVideo size={24} strokeWidth={1.5} />
           <span>Playlists</span>
-        </div>
+        </NavLink>
         <div className="sidebar-item">
           <Clock size={24} strokeWidth={1.5} />
           <span>Watch later</span>
@@ -95,4 +96,4 @@ const Sidebar = ({ isOpen }) => {
   );
 };
 
-export default Sidebar;
+export default memo(Sidebar);

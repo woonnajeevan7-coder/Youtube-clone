@@ -1,8 +1,8 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, memo } from 'react';
 import API from '../api';
 import { AuthContext } from '../context/AuthContext';
 import { Trash2, Edit2, Send } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { safeFormatDistance } from '../utils/date';
 import { toast } from 'react-toastify';
 import './Comments.css';
 
@@ -11,14 +11,18 @@ const Comments = ({ videoId }) => {
   const [newComment, setNewComment] = useState('');
   const [editingComment, setEditingComment] = useState(null);
   const [editText, setEditText] = useState('');
+  const [loading, setLoading] = useState(true);
   const { user } = useContext(AuthContext);
 
   const fetchComments = async () => {
+    setLoading(true);
     try {
       const { data } = await API.get(`/videos/${videoId}/comments`);
       setComments(data);
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,7 +67,7 @@ const Comments = ({ videoId }) => {
     <div className="comments-section">
       <h3>{comments.length} Comments</h3>
       <form className="comment-input-area" onSubmit={handleAddComment}>
-        <img src={`https://ui-avatars.com/api/?name=${user?.username || 'Guest'}`} alt="avatar" />
+        <img src={user?.avatar || `https://ui-avatars.com/api/?name=${user?.username || 'Guest'}`} alt="avatar" />
         <input 
           type="text" 
           placeholder="Add a comment..." 
@@ -74,13 +78,24 @@ const Comments = ({ videoId }) => {
       </form>
 
       <div className="comments-list">
-        {comments.map((comment) => (
-          <div key={comment.commentId} className="comment-item">
-            <img src={`https://ui-avatars.com/api/?name=${comment.userId}`} alt="avatar" className="comment-avatar" />
+        {loading ? (
+          Array.from({ length: 3 }).map((_, idx) => (
+            <div key={idx} style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
+              <div className="shimmer" style={{ backgroundColor: '#272727', width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0 }}></div>
+              <div style={{ flex: 1 }}>
+                <div className="shimmer" style={{ backgroundColor: '#272727', height: '14px', width: '120px', borderRadius: '4px', marginBottom: '8px' }}></div>
+                <div className="shimmer" style={{ backgroundColor: '#272727', height: '14px', width: '80%', borderRadius: '4px' }}></div>
+              </div>
+            </div>
+          ))
+        ) : (
+          comments.map((comment) => (
+            <div key={comment.commentId} className="comment-item">
+              <img src={comment.avatar || `https://ui-avatars.com/api/?name=${comment.username || comment.userId}`} alt="avatar" className="comment-avatar" />
             <div className="comment-content">
               <div className="comment-header">
-                <span className="comment-user">{comment.userId}</span>
-                <span className="comment-date">{formatDistanceToNow(new Date(comment.timestamp))} ago</span>
+                <span className="comment-user">{comment.username || comment.userId}</span>
+                <span className="comment-date">{safeFormatDistance(comment.timestamp)} ago</span>
               </div>
               {editingComment === comment.commentId ? (
                 <div className="edit-area">
@@ -104,10 +119,10 @@ const Comments = ({ videoId }) => {
               )}
             </div>
           </div>
-        ))}
+        )))}
       </div>
     </div>
   );
 };
 
-export default Comments;
+export default memo(Comments);

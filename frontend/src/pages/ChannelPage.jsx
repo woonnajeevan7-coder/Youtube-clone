@@ -1,14 +1,16 @@
 import { useEffect, useState, useContext } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import API from '../api';
 import { AuthContext } from '../context/AuthContext';
 import VideoCard from '../components/VideoCard';
+import VideoSkeleton from '../components/VideoSkeleton';
 import { Plus, Trash2, Edit } from 'lucide-react';
 import { toast } from 'react-toastify';
 import './ChannelPage.css';
 
 const ChannelPage = () => {
   const { channelId } = useParams();
+  const navigate = useNavigate();
   const [channel, setChannel] = useState(null);
   const [videos, setVideos] = useState([]);
   const [showUpload, setShowUpload] = useState(false);
@@ -64,13 +66,32 @@ const ChannelPage = () => {
       try {
           const { data } = await API.post('/channels', { channelName: title, description });
           toast.success('Channel created!');
-          window.location.href = `/channel/${data.channelId}`;
+          navigate(`/channel/${data.channelId}`);
       } catch (err) {
           toast.error('Creation failed');
       }
   };
 
-  if (loading) return <div className="loading-state">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="channel-page loading-mode">
+        <div className="channel-banner shimmer" style={{ backgroundColor: '#272727', height: '200px', borderRadius: '12px' }}></div>
+        <div className="channel-header" style={{ marginTop: '20px' }}>
+          <div className="shimmer" style={{ backgroundColor: '#272727', width: '80px', height: '80px', borderRadius: '50%', flexShrink: 0 }}></div>
+          <div className="channel-info-text" style={{ flex: 1 }}>
+            <div className="shimmer" style={{ backgroundColor: '#272727', height: '24px', width: '30%', borderRadius: '4px', marginBottom: '10px' }}></div>
+            <div className="shimmer" style={{ backgroundColor: '#272727', height: '16px', width: '20%', borderRadius: '4px' }}></div>
+          </div>
+        </div>
+        <hr className="divider" style={{ margin: '20px 0' }} />
+        <div className="channel-videos-grid">
+          {Array.from({ length: 4 }).map((_, idx) => (
+            <VideoSkeleton key={idx} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   if (channelId === 'create') {
       return (
@@ -97,7 +118,7 @@ const ChannelPage = () => {
         <img src={`https://ui-avatars.com/api/?name=${channel.channelName}`} alt="logo" className="channel-logo" />
         <div className="channel-info-text">
           <h1>{channel.channelName}</h1>
-          <p className="channel-stats">{channel.subscribers.toLocaleString()} subscribers • {videos.length} videos</p>
+          <p className="channel-stats">{(channel.subscribers || 0).toLocaleString()} subscribers • {videos.length} videos</p>
           <p className="channel-desc">{channel.description}</p>
         </div>
         {isOwner && (

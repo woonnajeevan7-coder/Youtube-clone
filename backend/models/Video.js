@@ -16,11 +16,17 @@ const videoSchema = new mongoose.Schema({
   channelId: { type: String, required: true },
   uploader: { type: String, required: true },
   views: { type: Number, default: 0 },
-  likes: { type: Number, default: 0 },
-  dislikes: { type: Number, default: 0 },
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],
+  dislikes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],
   uploadDate: { type: Date, default: Date.now },
   category: { type: String, required: true },
+  isDeleted: { type: Boolean, default: false },
   comments: [commentSchema]
 }, { timestamps: true });
+
+videoSchema.index({ channelId: 1 });
+videoSchema.index({ category: 1 });
+videoSchema.index({ uploadDate: -1 });
+videoSchema.index({ title: 'text' });
 
 export default mongoose.model('Video', videoSchema);

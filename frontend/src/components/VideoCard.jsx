@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { formatDistanceToNow } from 'date-fns';
+import { memo } from 'react';
+import { safeFormatDistance } from '../utils/date';
 import './VideoCard.css';
 
 const VideoCard = ({ video }) => {
@@ -14,7 +15,7 @@ const VideoCard = ({ video }) => {
           <h3 className="video-title">{video.title}</h3>
           <p className="channel-name">{video.uploader}</p>
           <p className="video-meta">
-            {video.views.toLocaleString()} views • {formatDistanceToNow(new Date(video.uploadDate))} ago
+            {(video.views || 0).toLocaleString()} views • {safeFormatDistance(video.uploadDate)} ago
           </p>
         </div>
       </div>
@@ -22,4 +23,4 @@ const VideoCard = ({ video }) => {
   );
 };
 
-export default VideoCard;
+export default memo(VideoCard);

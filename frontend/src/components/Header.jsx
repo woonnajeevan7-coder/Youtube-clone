@@ -1,12 +1,15 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, Search, Video, User, Bell, PlusSquare } from 'lucide-react';
+import { Menu, Search, User, Bell, PlusSquare } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
+import API from '../api';
 import './Header.css';
 
 const Header = ({ toggleSidebar }) => {
   const { user, logout } = useContext(AuthContext);
   const [searchTerm, setSearchTerm] = useState('');
+  const [notifications, setNotifications] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
@@ -15,6 +18,37 @@ const Header = ({ toggleSidebar }) => {
       navigate(`/?search=${searchTerm}`);
     }
   };
+
+  const fetchNotifications = async () => {
+    try {
+      const { data } = await API.get('/notifications');
+      setNotifications(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchNotifications();
+      const interval = setInterval(fetchNotifications, 15000);
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
+  const handleToggleNotifications = async () => {
+    setShowNotifications(!showNotifications);
+    if (!showNotifications && notifications.some(n => !n.isRead)) {
+      try {
+        await API.put('/notifications/read-all');
+        setNotifications(notifications.map(n => ({ ...n, isRead: true })));
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
+  const unreadCount = notifications.filter(n => !n.isRead).length;
 
   return (
     <header className="header">
@@ -47,7 +81,59 @@ const Header = ({ toggleSidebar }) => {
         {user ? (
           <div className="user-section">
             <PlusSquare className="icon-btn" onClick={() => navigate('/channel/create')} />
-            <Bell className="icon-btn" />
+            <div className="notification-bell-container" style={{ position: 'relative' }}>
+              <Bell className="icon-btn" onClick={handleToggleNotifications} />
+              {unreadCount > 0 && (
+                <span style={{
+                  position: 'absolute',
+                  top: '-4px',
+                  right: '-4px',
+                  backgroundColor: '#cc0000',
+                  color: '#fff',
+                  borderRadius: '50%',
+                  padding: '2px 6px',
+                  fontSize: '10px',
+                  fontWeight: 'bold'
+                }}>
+                  {unreadCount}
+                </span>
+              )}
+              {showNotifications && (
+                <div className="notifications-dropdown" style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  backgroundColor: '#0f0f0f',
+                  border: '1px solid #272727',
+                  borderRadius: '12px',
+                  padding: '12px',
+                  zIndex: 100,
+                  minWidth: '280px',
+                  boxShadow: '0px 4px 10px rgba(0,0,0,0.5)',
+                  marginTop: '8px',
+                  maxHeight: '300px',
+                  overflowY: 'auto'
+                }}>
+                  <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', color: '#f1f1f1', borderBottom: '1px solid #272727', paddingBottom: '6px' }}>Notifications</h4>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {notifications.map(n => (
+                      <li key={n.notificationId} style={{ 
+                        padding: '8px', 
+                        borderBottom: '1px solid #1f1f1f',
+                        fontSize: '12px',
+                        color: n.isRead ? '#888' : '#fff',
+                        fontWeight: n.isRead ? 'normal' : 'bold'
+                      }}>
+                        {n.text}
+                      </li>
+                    ))}
+                    {notifications.length === 0 && (
+                      <li style={{ color: '#777', fontSize: '12px', padding: '12px 8px', textAlign: 'center' }}>No notifications.</li>
+                    )}
+                  </ul>
+                </div>
+              )}
+            </div>
             <div className="user-profile">
               <img src={user.avatar} alt="avatar" className="avatar-small" />
               <span className="username-display">{user.username}</span>

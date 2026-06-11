@@ -119,6 +119,14 @@
   background-color: #3f3f3f;
 }
 
+.action-btn.active {
+  color: #3ea6ff;
+}
+
+.action-btn.active svg {
+  fill: #3ea6ff;
+}
+
 .like {
   border-right: 1px solid #3f3f3f;
 }

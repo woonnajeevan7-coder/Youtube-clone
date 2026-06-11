@@ -1,0 +1,258 @@
+.playlists-page {
+  display: flex;
+  height: calc(100vh - 56px);
+  background-color: #0f0f0f;
+  color: #fff;
+  overflow: hidden;
+}
+
+.playlists-left {
+  flex: 1;
+  max-width: 320px;
+  border-right: 1px solid #272727;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.playlists-left h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #f1f1f1;
+}
+
+.playlists-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.playlist-item-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1f1f1f;
+  border: 1px solid #272727;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.playlist-item-card:hover {
+  background-color: #272727;
+  border-color: #3f3f3f;
+}
+
+.playlist-item-card.active {
+  background-color: #272727;
+  border-color: #ff0000;
+}
+
+.playlist-card-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.playlist-icon {
+  color: #ff0000;
+}
+
+.playlist-card-info h4 {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+  color: #f1f1f1;
+}
+
+.playlist-card-info p {
+  font-size: 12px;
+  color: #aaa;
+  margin: 2px 0 0 0;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: #ff4d4d;
+}
+
+.no-playlists-text {
+  font-size: 13px;
+  color: #777;
+  line-height: 1.5;
+}
+
+.playlists-right {
+  flex: 2;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.no-playlist-selected {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #555;
+  gap: 12px;
+}
+
+.playlist-details-header {
+  border-bottom: 1px solid #272727;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.playlist-details-header h3 {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  color: #f1f1f1;
+}
+
+.playlist-details-header p {
+  font-size: 14px;
+  color: #aaa;
+  margin: 6px 0 0 0;
+}
+
+.playlist-videos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.playlist-video-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: #161616;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 8px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+.playlist-video-row:hover {
+  background-color: #202020;
+  border-color: #333;
+}
+
+.video-row-thumb {
+  width: 120px;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.video-row-info {
+  flex: 1;
+}
+
+.video-row-info h4 {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0 0 4px 0;
+  color: #f1f1f1;
+  line-clamp: 2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.video-row-info p {
+  font-size: 12px;
+  color: #aaa;
+  margin: 0;
+}
+
+.remove-video-btn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  margin-right: 8px;
+}
+
+.remove-video-btn:hover {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: #ff4d4d;
+}
+
+.empty-playlist-videos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: #555;
+  gap: 8px;
+}
+
+/* Empty signed out state styling */
+.playlists-page-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 56px);
+  background-color: #0f0f0f;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
+.empty-icon {
+  color: #555;
+  margin-bottom: 16px;
+}
+
+.playlists-page-empty h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.playlists-page-empty p {
+  font-size: 14px;
+  color: #aaa;
+  max-width: 320px;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.sign-in-btn {
+  background-color: #ff0000;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 24px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.sign-in-btn:hover {
+  background-color: #cc0000;
+}

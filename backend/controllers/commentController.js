@@ -1,4 +1,7 @@
 import Video from '../models/Video.js';
+import User from '../models/User.js';
+import { createNotification } from './notificationController.js';
+import crypto from 'crypto';
 
 /**
  * @desc    Add a comment to a video
@@ -16,7 +19,7 @@ export const addComment = async (req, res) => {
     if (!video) return res.status(404).json({ message: 'Video not found' });
 
     const comment = {
-      commentId: `comment${Date.now()}`,
+      commentId: `comment_${crypto.randomUUID()}`,
       userId: req.user.userId,
       text,
       timestamp: new Date(),
@@ -24,7 +27,20 @@ export const addComment = async (req, res) => {
 
     video.comments.push(comment);
     await video.save();
-    res.status(201).json(comment);
+
+    // Trigger notification
+    if (video.uploader !== req.user.userId) {
+      await createNotification(video.uploader, `${req.user.username} commented on your video: "${text.substring(0, 30)}${text.length > 30 ? '...' : ''}"`);
+    }
+
+    res.status(201).json({
+      commentId: comment.commentId,
+      userId: comment.userId,
+      username: req.user.username,
+      avatar: req.user.avatar || `https://ui-avatars.com/api/?name=${req.user.username}`,
+      text: comment.text,
+      timestamp: comment.timestamp
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -41,7 +57,29 @@ export const getComments = async (req, res) => {
   try {
     const video = await Video.findOne({ videoId: req.params.videoId });
     if (!video) return res.status(404).json({ message: 'Video not found' });
-    res.json(video.comments);
+
+    // Fetch user details for each comment author
+    const userIds = video.comments.map(c => c.userId);
+    const users = await User.find({ userId: { $in: userIds } }).select('userId username avatar');
+
+    const userMap = {};
+    users.forEach(u => {
+      userMap[u.userId] = { username: u.username, avatar: u.avatar };
+    });
+
+    const commentsWithUser = video.comments.map(c => {
+      const u = userMap[c.userId];
+      return {
+        commentId: c.commentId,
+        userId: c.userId,
+        username: u ? u.username : c.userId,
+        avatar: u ? u.avatar : `https://ui-avatars.com/api/?name=${c.userId}`,
+        text: c.text,
+        timestamp: c.timestamp
+      };
+    });
+
+    res.json(commentsWithUser);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
