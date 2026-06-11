@@ -2,35 +2,23 @@ import Notification from '../models/Notification.js';
 import crypto from 'crypto';
 
 export const getNotifications = async (req, res) => {
-  try {
-    const notifications = await Notification.find({ userId: req.user.userId }).sort({ createdAt: -1 });
-    res.json(notifications);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+  const notifications = await Notification.find({ userId: req.user.userId }).sort({ createdAt: -1 }).lean();
+  res.json(notifications);
 };
 
 export const markAsRead = async (req, res) => {
-  try {
-    const notification = await Notification.findOne({ notificationId: req.params.notificationId });
-    if (!notification) return res.status(404).json({ message: 'Notification not found' });
-    if (notification.userId !== req.user.userId) return res.status(401).json({ message: 'Not authorized' });
+  const notification = await Notification.findOne({ notificationId: req.params.notificationId });
+  if (!notification) return res.status(404).json({ message: 'Notification not found' });
+  if (notification.userId !== req.user.userId) return res.status(401).json({ message: 'Not authorized' });
 
-    notification.isRead = true;
-    await notification.save();
-    res.json(notification);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+  notification.isRead = true;
+  await notification.save();
+  res.json(notification);
 };
 
 export const markAllAsRead = async (req, res) => {
-  try {
-    await Notification.updateMany({ userId: req.user.userId, isRead: false }, { isRead: true });
-    res.json({ message: 'All notifications marked as read' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+  await Notification.updateMany({ userId: req.user.userId, isRead: false }, { isRead: true });
+  res.json({ message: 'All notifications marked as read' });
 };
 
 // Internal utility to create notifications

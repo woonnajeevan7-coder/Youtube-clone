@@ -24,95 +24,168 @@ const VideoPlayer = () => {
   const [newPlaylistName, setNewPlaylistName] = useState('');
   const [relatedVideos, setRelatedVideos] = useState([]);
 
-  const fetchVideo = async () => {
+  const fetchVideo = async (signal) => {
     try {
-      const { data } = await API.get(`/videos/${videoId}`);
+      const { data } = await API.get(`/videos/${videoId}`, { signal });
       setVideo(data);
       if (user) {
-        API.post('/auth/history', { videoId }).catch(err => console.error(err));
+        API.post('/auth/history', { videoId }).catch(() => {});
       }
     } catch (err) {
-      console.error(err);
+      if (err.name !== 'CanceledError' && err.name !== 'AbortError') {
+        console.error(err);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchVideo();
+    const controller = new AbortController();
+    setLoading(true);
+    fetchVideo(controller.signal);
+    return () => controller.abort();
   }, [videoId]);
 
   useEffect(() => {
-    if (video) {
-      const fetchChannelInfo = async () => {
-        try {
-          const { data } = await API.get(`/channels/${video.channelId}`);
-          setChannel(data.channel);
-          setSubscribers(data.channel.subscribers);
-        } catch (err) {
+    if (!video) return;
+    const controller = new AbortController();
+
+    const fetchChannelInfo = async () => {
+      try {
+        const { data } = await API.get(`/channels/${video.channelId}`, { signal: controller.signal });
+        setChannel(data.channel);
+        setSubscribers(data.channel.subscribers);
+      } catch (err) {
+        if (err.name !== 'CanceledError' && err.name !== 'AbortError') {
           console.error(err);
         }
-      };
-      fetchChannelInfo();
+      }
+    };
+    fetchChannelInfo();
 
-      if (user) {
-        const fetchSubStatus = async () => {
-          try {
-            const { data } = await API.get(`/channels/${video.channelId}/isSubscribed`);
-            setIsSubscribed(data.isSubscribed);
-          } catch (err) {
+    if (user) {
+      const fetchSubStatus = async () => {
+        try {
+          const { data } = await API.get(`/channels/${video.channelId}/isSubscribed`, { signal: controller.signal });
+          setIsSubscribed(data.isSubscribed);
+        } catch (err) {
+          if (err.name !== 'CanceledError' && err.name !== 'AbortError') {
             console.error(err);
           }
-        };
-        fetchSubStatus();
-      }
+        }
+      };
+      fetchSubStatus();
     }
+
+    return () => controller.abort();
   }, [video, user]);
 
   useEffect(() => {
+    if (!user) return;
+    const controller = new AbortController();
+
     const fetchPlaylists = async () => {
       try {
-        const { data } = await API.get('/playlists');
+        const { data } = await API.get('/playlists', { signal: controller.signal });
         setPlaylists(data);
       } catch (err) {
-        console.error(err);
+        if (err.name !== 'CanceledError' && err.name !== 'AbortError') {
+          console.error(err);
+        }
       }
     };
-    if (user) {
-      fetchPlaylists();
-    }
+    fetchPlaylists();
+
+    return () => controller.abort();
   }, [user]);
 
   useEffect(() => {
+    if (!video) return;
+    const controller = new AbortController();
+
     const fetchRelatedVideos = async () => {
       try {
         const { data } = await API.get('/videos', {
-          params: { category: video?.category }
+          params: { category: video?.category },
+          signal: controller.signal
         });
         setRelatedVideos(data.filter(v => v.videoId !== videoId));
       } catch (err) {
-        console.error(err);
+        if (err.name !== 'CanceledError' && err.name !== 'AbortError') {
+          console.error(err);
+        }
       }
     };
-    if (video) {
-      fetchRelatedVideos();
-    }
+    fetchRelatedVideos();
+
+    return () => controller.abort();
   }, [video, videoId]);
 
   const handleLike = async () => {
     if (!user) return toast.warning('Please log in to like videos');
+
+    const prevVideo = { ...video };
+    const userObjectId = user._id || user.userId;
+
+    let likes = Array.isArray(video.likes) ? [...video.likes] : [];
+    let dislikes = Array.isArray(video.dislikes) ? [...video.dislikes] : [];
+
+    const isLiked = likes.includes(userObjectId);
+    const isDisliked = dislikes.includes(userObjectId);
+
+    if (isLiked) {
+      likes = likes.filter(id => id !== userObjectId);
+    } else {
+      likes.push(userObjectId);
+      if (isDisliked) {
+        dislikes = dislikes.filter(id => id !== userObjectId);
+      }
+    }
+
+    setVideo({ ...video, likes, dislikes });
+
     try {
       const { data } = await API.post(`/videos/${videoId}/like`);
       setVideo({ ...video, likes: data.likes, dislikes: data.dislikes });
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error(err);
+      setVideo(prevVideo);
+      toast.error('Failed to register like');
+    }
   };
 
   const handleDislike = async () => {
     if (!user) return toast.warning('Please log in to dislike videos');
+
+    const prevVideo = { ...video };
+    const userObjectId = user._id || user.userId;
+
+    let likes = Array.isArray(video.likes) ? [...video.likes] : [];
+    let dislikes = Array.isArray(video.dislikes) ? [...video.dislikes] : [];
+
+    const isLiked = likes.includes(userObjectId);
+    const isDisliked = dislikes.includes(userObjectId);
+
+    if (isDisliked) {
+      dislikes = dislikes.filter(id => id !== userObjectId);
+    } else {
+      dislikes.push(userObjectId);
+      if (isLiked) {
+        likes = likes.filter(id => id !== userObjectId);
+      }
+    }
+
+    setVideo({ ...video, likes, dislikes });
+
     try {
       const { data } = await API.post(`/videos/${videoId}/dislike`);
       setVideo({ ...video, likes: data.likes, dislikes: data.dislikes });
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error(err);
+      setVideo(prevVideo);
+      toast.error('Failed to register dislike');
+    }
   };
 
   const handleSubscribe = async () => {
@@ -192,7 +265,7 @@ const VideoPlayer = () => {
         <div className="video-meta-section">
           <div className="channel-info-player">
             <Link to={`/channel/${video.channelId}`} style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', color: 'inherit' }}>
-              <img src={`https://ui-avatars.com/api/?name=${channel?.channelName || video.uploader}`} alt="channel" className="avatar-large" />
+              <img src={`https://ui-avatars.com/api/?name=${channel?.channelName || video.uploader}`} alt="channel" className="avatar-large" loading="lazy" />
               <div className="channel-text">
                 <span className="channel-name-player">{channel?.channelName || video.uploader}</span>
                 <span className="sub-count">{(subscribers || 0).toLocaleString()} subscribers</span>

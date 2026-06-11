@@ -7,10 +7,10 @@ const VideoCard = ({ video }) => {
   return (
     <Link to={`/video/${video.videoId}`} className="video-card">
       <div className="thumbnail-container">
-        <img src={video.thumbnailUrl} alt={video.title} className="thumbnail" />
+        <img src={video.thumbnailUrl} alt={video.title} className="thumbnail" loading="lazy" />
       </div>
       <div className="video-info">
-        <img src={`https://ui-avatars.com/api/?name=${video.uploader}`} alt="avatar" className="channel-avatar" />
+        <img src={`https://ui-avatars.com/api/?name=${video.uploader}`} alt="avatar" className="channel-avatar" loading="lazy" />
         <div className="video-details">
           <h3 className="video-title">{video.title}</h3>
           <p className="channel-name">{video.uploader}</p>

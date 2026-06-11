@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, Search, User, Bell, PlusSquare } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import API from '../api';
@@ -11,11 +11,40 @@ const Header = ({ toggleSidebar }) => {
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Sync state search with URL search param
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const urlSearch = params.get('search') || '';
+    if (searchTerm !== urlSearch) {
+      setSearchTerm(urlSearch);
+    }
+  }, [location.search]);
+
+  // Debounced search trigger on typing
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const currentSearch = params.get('search') || '';
+    if (searchTerm === currentSearch) return;
+
+    const delayDebounce = setTimeout(() => {
+      if (searchTerm.trim()) {
+        navigate(`/?search=${searchTerm}`);
+      } else {
+        navigate('/');
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchTerm, navigate, location.search]);
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       navigate(`/?search=${searchTerm}`);
+    } else {
+      navigate('/');
     }
   };
 

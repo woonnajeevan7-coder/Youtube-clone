@@ -24,25 +24,32 @@ const ChannelPage = () => {
   const [videoUrl, setVideoUrl] = useState('');
   const [category, setCategory] = useState('Education');
 
-  const fetchChannelData = async () => {
+  const fetchChannelData = async (signal) => {
     try {
-      const { data } = await API.get(`/channels/${channelId}`);
+      const { data } = await API.get(`/channels/${channelId}`, { signal });
       setChannel(data.channel);
       setVideos(data.videos);
     } catch (err) {
-      console.error(err);
-      toast.error('Failed to load channel');
+      if (err.name !== 'CanceledError' && err.name !== 'AbortError') {
+        console.error(err);
+        toast.error('Failed to load channel');
+      }
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
+    const controller = new AbortController();
+
     if (channelId !== 'create') {
-      fetchChannelData();
+      setLoading(true);
+      fetchChannelData(controller.signal);
     } else {
       setLoading(false);
     }
+
+    return () => controller.abort();
   }, [channelId]);
 
   const handleUpload = async (e) => {
@@ -115,7 +122,7 @@ const ChannelPage = () => {
       <div className="channel-banner" style={{ backgroundImage: `url(${channel.channelBanner || 'https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&q=80'})` }}></div>
       
       <div className="channel-header">
-        <img src={`https://ui-avatars.com/api/?name=${channel.channelName}`} alt="logo" className="channel-logo" />
+        <img src={`https://ui-avatars.com/api/?name=${channel.channelName}`} alt="logo" className="channel-logo" loading="lazy" />
         <div className="channel-info-text">
           <h1>{channel.channelName}</h1>
           <p className="channel-stats">{(channel.subscribers || 0).toLocaleString()} subscribers • {videos.length} videos</p>

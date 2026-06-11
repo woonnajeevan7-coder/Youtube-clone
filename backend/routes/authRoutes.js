@@ -10,14 +10,15 @@ import {
 import { validateRequest, registerSchema, loginSchema } from '../middleware/validationMiddleware.js';
 import { authLimiter } from '../middleware/rateLimiter.js';
 import { protect } from '../middleware/authMiddleware.js';
+import asyncHandler from '../middleware/asyncHandler.js';
 
 const router = express.Router();
 
-router.post('/register', authLimiter, validateRequest(registerSchema), registerUser);
-router.post('/login', authLimiter, validateRequest(loginSchema), loginUser);
-router.post('/logout', logoutUser);
-router.post('/refresh', refreshAccessToken);
-router.post('/history', protect, addWatchHistory);
-router.get('/history', protect, getWatchHistory);
+router.post('/register', authLimiter, validateRequest(registerSchema), asyncHandler(registerUser));
+router.post('/login', authLimiter, validateRequest(loginSchema), asyncHandler(loginUser));
+router.post('/logout', asyncHandler(logoutUser));
+router.post('/refresh', asyncHandler(refreshAccessToken));
+router.post('/history', protect, asyncHandler(addWatchHistory));
+router.get('/history', protect, asyncHandler(getWatchHistory));
 
 export default router;

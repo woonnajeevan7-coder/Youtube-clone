@@ -1,10 +1,12 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import compression from 'compression';
 import morgan from 'morgan';
+import mongoose from 'mongoose';
+import env from './config/env.js';
+import logger from './config/logger.js';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import videoRoutes from './routes/videoRoutes.js';
@@ -12,22 +14,18 @@ import channelRoutes from './routes/channelRoutes.js';
 import playlistRoutes from './routes/playlistRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 
-dotenv.config();
-
-// Fail fast if required environment configurations are missing
-if (!process.env.MONGO_URI) {
-  throw new Error('FATAL ERROR: MONGO_URI environment variable is missing.');
-}
-if (!process.env.JWT_SECRET) {
-  throw new Error('FATAL ERROR: JWT_SECRET environment variable is missing.');
-}
-
 connectDB();
 
 const app = express();
 
 app.use(compression());
-app.use(morgan('combined'));
+
+// Stream Morgan access logs into Winston
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms', {
+  stream: {
+    write: (message) => logger.info(message.trim())
+  }
+}));
 
 app.use(helmet({
   contentSecurityPolicy: {
@@ -41,7 +39,7 @@ app.use(helmet({
 }));
 
 const allowedOrigins = [
-  process.env.CLIENT_URL,
+  env.CLIENT_URL,
   'http://localhost:3000',
   'http://localhost:3001',
   'http://localhost:5173'
@@ -49,7 +47,7 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+    if (!origin || allowedOrigins.includes(origin) || env.NODE_ENV !== 'production') {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -80,16 +78,40 @@ app.get('/', (req, res) => res.send('API is running...'));
 
 // Global Central Error Handler Middleware
 app.use((err, req, res, next) => {
-  console.error('Central Error Handler Captured:', err.stack || err);
+  logger.error('Central Error Handler Captured:', err);
   res.status(err.status || 500).json({
     message: err.message || 'Internal Server Error',
-    error: process.env.NODE_ENV === 'production' ? {} : { message: err.message, stack: err.stack }
+    error: env.NODE_ENV === 'production' ? {} : { message: err.message, stack: err.stack }
   });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = env.PORT;
+let server;
 if (process.env.VERCEL !== '1') {
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  server = app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
 }
+
+// Graceful shutdown listeners
+const handleGracefulShutdown = (signal) => {
+  logger.info(`Received ${signal}. Starting graceful shutdown...`);
+  if (server) {
+    server.close(async () => {
+      logger.info('HTTP server closed.');
+      try {
+        await mongoose.connection.close(false);
+        logger.info('MongoDB connection closed.');
+        process.exit(0);
+      } catch (err) {
+        logger.error('Error closing MongoDB connection:', err);
+        process.exit(1);
+      }
+    });
+  } else {
+    process.exit(0);
+  }
+};
+
+process.on('SIGTERM', () => handleGracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => handleGracefulShutdown('SIGINT'));
 
 export default app;

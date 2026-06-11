@@ -25,7 +25,7 @@ const videoSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 videoSchema.index({ channelId: 1 });
-videoSchema.index({ category: 1 });
+videoSchema.index({ category: 1, uploadDate: -1 });
 videoSchema.index({ uploadDate: -1 });
 videoSchema.index({ title: 'text' });
 

@@ -13,24 +13,29 @@ const PlaylistsPage = () => {
   const [playlistVideos, setPlaylistVideos] = useState([]);
   const { user } = useContext(AuthContext);
 
-  const fetchPlaylists = async () => {
+  const fetchPlaylists = async (signal) => {
     try {
-      const { data } = await API.get('/playlists');
+      const { data } = await API.get('/playlists', { signal });
       setPlaylists(data);
     } catch (err) {
-      console.error(err);
-      toast.error('Failed to load playlists');
+      if (err.name !== 'CanceledError' && err.name !== 'AbortError') {
+        console.error(err);
+        toast.error('Failed to load playlists');
+      }
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
+    const controller = new AbortController();
     if (user) {
-      fetchPlaylists();
+      setLoading(true);
+      fetchPlaylists(controller.signal);
     } else {
       setLoading(false);
     }
+    return () => controller.abort();
   }, [user]);
 
   const handleFetchPlaylistDetails = async (playlistId) => {

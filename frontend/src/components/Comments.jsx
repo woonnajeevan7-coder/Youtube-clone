@@ -4,6 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 import { Trash2, Edit2, Send } from 'lucide-react';
 import { safeFormatDistance } from '../utils/date';
 import { toast } from 'react-toastify';
+import { List } from 'react-window';
 import './Comments.css';
 
 const Comments = ({ videoId }) => {
@@ -63,11 +64,71 @@ const Comments = ({ videoId }) => {
     }
   };
 
+  const CommentRow = ({ index, style }) => {
+    const comment = comments[index];
+    if (!comment) return null;
+
+    return (
+      <div style={style} className="comment-item-row">
+        <div className="comment-item">
+          <img 
+            src={comment.avatar || `https://ui-avatars.com/api/?name=${comment.username || comment.userId}`} 
+            alt="avatar" 
+            className="comment-avatar" 
+            loading="lazy"
+          />
+          <div className="comment-content">
+            <div className="comment-header">
+              <span className="comment-user">{comment.username || comment.userId}</span>
+              <span className="comment-date">{safeFormatDistance(comment.timestamp)} ago</span>
+            </div>
+            {editingComment === comment.commentId ? (
+              <div className="edit-area">
+                <input 
+                  value={editText} 
+                  onChange={(e) => setEditText(e.target.value)} 
+                  className="comment-edit-input"
+                />
+                <div className="edit-btns">
+                  <button onClick={() => handleUpdate(comment.commentId)} className="save-btn">Save</button>
+                  <button onClick={() => setEditingComment(null)} className="cancel-btn">Cancel</button>
+                </div>
+              </div>
+            ) : (
+              <p className="comment-text">{comment.text}</p>
+            )}
+            {user?.userId === comment.userId && !editingComment && (
+              <div className="comment-actions">
+                <Edit2 
+                  size={16} 
+                  onClick={() => {
+                    setEditingComment(comment.commentId);
+                    setEditText(comment.text);
+                  }} 
+                  style={{ cursor: 'pointer', marginRight: '8px' }}
+                />
+                <Trash2 
+                  size={16} 
+                  onClick={() => handleDelete(comment.commentId)} 
+                  style={{ cursor: 'pointer' }}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="comments-section">
       <h3>{comments.length} Comments</h3>
       <form className="comment-input-area" onSubmit={handleAddComment}>
-        <img src={user?.avatar || `https://ui-avatars.com/api/?name=${user?.username || 'Guest'}`} alt="avatar" />
+        <img 
+          src={user?.avatar || `https://ui-avatars.com/api/?name=${user?.username || 'Guest'}`} 
+          alt="avatar" 
+          loading="lazy"
+        />
         <input 
           type="text" 
           placeholder="Add a comment..." 
@@ -88,38 +149,19 @@ const Comments = ({ videoId }) => {
               </div>
             </div>
           ))
+        ) : comments.length === 0 ? (
+          <div className="no-comments" style={{ padding: '16px 0', color: '#aaaaaa' }}>No comments yet.</div>
         ) : (
-          comments.map((comment) => (
-            <div key={comment.commentId} className="comment-item">
-              <img src={comment.avatar || `https://ui-avatars.com/api/?name=${comment.username || comment.userId}`} alt="avatar" className="comment-avatar" />
-            <div className="comment-content">
-              <div className="comment-header">
-                <span className="comment-user">{comment.username || comment.userId}</span>
-                <span className="comment-date">{safeFormatDistance(comment.timestamp)} ago</span>
-              </div>
-              {editingComment === comment.commentId ? (
-                <div className="edit-area">
-                  <input value={editText} onChange={(e) => setEditText(e.target.value)} />
-                  <div className="edit-btns">
-                    <button onClick={() => handleUpdate(comment.commentId)}>Save</button>
-                    <button onClick={() => setEditingComment(null)}>Cancel</button>
-                  </div>
-                </div>
-              ) : (
-                <p className="comment-text">{comment.text}</p>
-              )}
-              {user?.userId === comment.userId && !editingComment && (
-                <div className="comment-actions">
-                  <Edit2 size={16} onClick={() => {
-                    setEditingComment(comment.commentId);
-                    setEditText(comment.text);
-                  }} />
-                  <Trash2 size={16} onClick={() => handleDelete(comment.commentId)} />
-                </div>
-              )}
-            </div>
-          </div>
-        )))}
+          <List
+            height={380}
+            itemCount={comments.length}
+            itemSize={95}
+            width="100%"
+            style={{ overflowX: 'hidden' }}
+          >
+            {CommentRow}
+          </List>
+        )}
       </div>
     </div>
   );
