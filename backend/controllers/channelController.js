@@ -1,5 +1,6 @@
 import Channel from '../models/Channel.js';
 import Video from '../models/Video.js';
+import User from '../models/User.js';
 import crypto from 'crypto';
 
 // @desc    Create a new channel
